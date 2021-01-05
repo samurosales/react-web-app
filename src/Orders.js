@@ -20,6 +20,7 @@ let rows = [];
 let data01 = []
 let data02 = []
 let data03 = []
+let data04 = []
 
 function preventDefault(event) {
   event.preventDefault();
@@ -116,6 +117,20 @@ export default function Orders() {
         },{})).map((value)=>{
           return { name: value[0], value: value[1]}
         })
+
+
+        // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+        const url = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/lastFive' // site that doesn’t send Access-Control-*
+        fetch(url) // https://cors-anywhere.herokuapp.com/https://example.com
+        .then(response => response.text())
+        .then((contents) => {
+
+        })
+        .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+
+     
+        
+
         // console.log(jsonData)
         setResponse("\nPatients")
         // console.log(data, 'datos')
@@ -148,7 +163,29 @@ export default function Orders() {
           }
         </Pie>
       </PieChart> */}
-
+      <Title>Last 5 - Patients</Title>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Age</TableCell>
+            <TableCell>Infected Type</TableCell>
+            <TableCell align="right">State</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data04.map((data04) => (
+            <TableRow>
+              <TableCell>{data04.name}</TableCell>
+              <TableCell>{data04.location}</TableCell>
+              <TableCell>{data04.age}</TableCell>
+              <TableCell>{data04.infected_type}</TableCell>
+              <TableCell align="right">{data04.state}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       
       <Title>Top 3 - Locations</Title>
       <Table size="small">

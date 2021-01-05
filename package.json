@@ -16,6 +16,7 @@
     "material-ui": "^0.20.2",
     "ng2-charts": "^2.4.2",
     "react": "latest",
+    "react-async": "^10.0.1",
     "react-dom": "latest",
     "react-scripts": "latest",
     "recharts": "^1.8.5",

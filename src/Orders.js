@@ -10,18 +10,21 @@ import Title from './Title.js';
 import { PieChart, Pie, Cell, sector } from 'recharts';
 import socketIOClient from "socket.io-client";
 const ENDPOINT = "https://node-mongo-service-tko2cvu2ea-uc.a.run.app";
+import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from 'recharts';
+
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
 
+
 let rows = [];
 let data01 = []
 let data02 = []
 let data03 = []
 let data04 = []
-
+let data05 = []
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -120,49 +123,78 @@ export default function Orders() {
 
 
         // const proxyurl = "https://cors-anywhere.herokuapp.com/";
+
+     // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
+
         const url = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/lastFive' // site that doesn’t send Access-Control-*
         fetch(url) // https://cors-anywhere.herokuapp.com/https://example.com
-        .then(response => response.text())
-        .then((contents) => {
-
+        .then(response => response.json())
+        .then(data => {
+          data04 = data.map((value)=>{
+            return JSON.parse(value)
+          })
+          
         })
-        .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
-
-     
-        
+        .catch(console.error);
+         
+        const url2 = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/ageGraph' // site that doesn’t send Access-Control-*
+        fetch(url2) // https://cors-anywhere.herokuapp.com/https://example.com
+        .then(response => response.json())
+        .then(data => {
+          data05 = data
+          console.log(data05,"^^^^")
+          // console.log(data04)
+          setResponse("\nPatients")
+        })
+        .catch(console.error);
+         
 
         // console.log(jsonData)
-        setResponse("\nPatients")
+        
         // console.log(data, 'datos')
     });
   }, []);
+
+
+
+
+
 
 
   const classes = useStyles();
   return (
     <React.Fragment>
 
-      <PieChart width={930} height={900}>
+
+
+<h3>Mongo Data Graph</h3>
+
+<PieChart width={930} height={900}>
         <Pie data={data01} dataKey="value" outerRadius={170} fill="#677f8d" label={renderCustomizedLabel} labelLine={false}/>
         <Pie data={data02} dataKey="value" innerRadius={210} outerRadius={255} fill="#8eabbd" label={renderCustomizedLabel2} labelLine={false}/>
         <Pie data={data03} dataKey="value" innerRadius={320} outerRadius={350} fill="#abcbdf" label={renderCustomizedLabel3} labelLine={false}/>
       </PieChart>
 
-          	{/* <PieChart width={800} height={400} >
-        <Pie
-          data={data01} 
-          cx={300} 
-          cy={200} 
-          labelLine={false}
-          label={renderCustomizedLabel}
-          outerRadius={80} 
-          fill="#8884d8"
-        >
-        	{
-          	data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
-          }
-        </Pie>
-      </PieChart> */}
+<h3>Age Graph</h3>
+        <BarChart 
+              data={data05}
+              layout="vertical" barCategoryGap={1}
+              // margin={{ top: 0, right: 50, left: 0, bottom: 0 }}
+              width={730} height={300}
+              >
+        <XAxis type="number" hide />
+        <YAxis type="category" width={40} padding={{ left: 200 }} dataKey="name"/>
+            
+        <Bar 
+           dataKey="value" 
+           fill="#323232"
+           label
+           barSize={20}
+           />
+           
+      </BarChart>
+   
+
       <Title>Last 5 - Patients</Title>
       <Table size="small">
         <TableHead>
@@ -175,13 +207,13 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data04.map((data04) => (
+          {data04.map((data) => (
             <TableRow>
-              <TableCell>{data04.name}</TableCell>
-              <TableCell>{data04.location}</TableCell>
-              <TableCell>{data04.age}</TableCell>
-              <TableCell>{data04.infected_type}</TableCell>
-              <TableCell align="right">{data04.state}</TableCell>
+              <TableCell>{data.name}</TableCell>
+              <TableCell>{data.location}</TableCell>
+              <TableCell>{data.age}</TableCell>
+              <TableCell>{data.infected_type}</TableCell>
+              <TableCell align="right">{data.state}</TableCell>
             </TableRow>
           ))}
         </TableBody>

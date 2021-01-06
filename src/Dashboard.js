@@ -20,6 +20,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
+import BarsChart from './BarsChart';
 import Deposits from './Deposits';
 import Orders from './Orders.js';
 
@@ -174,11 +175,16 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Chart */}
-            {/* <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={8} lg={9}>
+              <Paper className={classes.paper}>
+                { <BarsChart /> }
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={8} lg={9}>
               <Paper className={classes.paper}>
                 { <Chart /> }
               </Paper>
-            </Grid> */}
+            </Grid>
             {/* Recent Deposits */}
             {/* <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>

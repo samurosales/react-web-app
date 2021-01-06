@@ -6,15 +6,17 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Title from './Title';
 import Async from 'react-async';
+import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from 'recharts';
+
 
 import axios from 'axios'
 
 
-const Chart=()=> {
+const BarsChart=()=> {
   const [posts, setPosts]=useState([])
 
   const getPosts = async () => {
-      try {const userPosts = await axios.get("https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/lastFive")
+      try {const userPosts = await axios.get("https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/ageGraph")
         
         setPosts(userPosts.data);  // set State
       
@@ -40,31 +42,24 @@ const Chart=()=> {
 
     return (
         <div>
-
-          <Title>Last 5 - Patients</Title>
-
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Age</TableCell>
-                  <TableCell>Infected Type</TableCell>
-                  <TableCell align="right">State</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(JSON.parse(`[${posts}]`)).map((data) => (
-                  <TableRow>
-                    <TableCell>{data.name}</TableCell>
-                    <TableCell>{data.location}</TableCell>
-                    <TableCell>{data.age}</TableCell>
-                    <TableCell>{data.infected_type}</TableCell>
-                    <TableCell align="right">{data.state}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+          <h3>Age Graph</h3>
+        <BarChart 
+              data={posts}
+              layout="vertical" barCategoryGap={1}
+              // margin={{ top: 0, right: 50, left: 0, bottom: 0 }}
+              width={730} height={300}
+              >
+        <XAxis type="number" hide />
+        <YAxis type="category" width={40} padding={{ left: 200 }} dataKey="name"/>
+            
+        <Bar 
+           dataKey="value" 
+           fill="#323232"
+           label
+           barSize={20}
+           />
+           
+      </BarChart>
         </div>
     );
 
@@ -131,4 +126,4 @@ const Chart=()=> {
 //   );
 // }
 
-export default Chart;
+export default BarsChart;

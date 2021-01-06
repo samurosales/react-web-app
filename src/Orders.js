@@ -78,7 +78,8 @@ const renderCustomizedLabel3 = ({ cx, cy, midAngle, innerRadius, outerRadius, pe
 
 export default function Orders() {
 
-  const [response, setResponse] = useState("");
+  // const [response, setResponse] = useState("");
+  const [allData, setAllData]=useState([])
 
   useEffect(() => {
     const socket = socketIOClient(ENDPOINT);
@@ -86,69 +87,76 @@ export default function Orders() {
         rows = JSON.parse(data)
 
 
-        data01 = Object.entries(rows.reduce((obj, value)=>{
-          if(!obj[value.location]){
-            obj[value.location] = 1
-          }else{
-            obj[value.location] += 1
-          }
-          return obj
-        },{})).map((value)=>{
-          return { name: value[0], value: value[1]}
-        })
+        // data01 = Object.entries(rows.reduce((obj, value)=>{
+        //   if(!obj[value.location]){
+        //     obj[value.location] = 1
+        //   }else{
+        //     obj[value.location] += 1
+        //   }
+        //   return obj
+        // },{})).map((value)=>{
+        //   return { name: value[0], value: value[1]}
+        // })
 
-        data01.sort(function(a, b){return b.value-a.value})
+        // data01.sort(function(a, b){return b.value-a.value})
 
-        data02 = Object.entries(rows.reduce((obj, value)=>{
-          if(!obj[value.infected_type]){
-            obj[value.infected_type] = 1
-          }else{
-            obj[value.infected_type] += 1
-          }
-          return obj
-        },{})).map((value)=>{
-          return { name: value[0], value: value[1]}
-        })
         
-        data03 = Object.entries(rows.reduce((obj, value)=>{
-          if(!obj[value.state]){
-            obj[value.state] = 1
-          }else{
-            obj[value.state] += 1
-          }
-          return obj
-        },{})).map((value)=>{
-          return { name: value[0], value: value[1]}
-        })
 
+        // data02 = Object.entries(rows.reduce((obj, value)=>{
+        //   if(!obj[value.infected_type]){
+        //     obj[value.infected_type] = 1
+        //   }else{
+        //     obj[value.infected_type] += 1
+        //   }
+        //   return obj
+        // },{})).map((value)=>{
+        //   return { name: value[0], value: value[1]}
+        // })
+
+
+        
+        
+        // data03 = Object.entries(rows.reduce((obj, value)=>{
+        //   if(!obj[value.state]){
+        //     obj[value.state] = 1
+        //   }else{
+        //     obj[value.state] += 1
+        //   }
+        //   return obj
+        // },{})).map((value)=>{
+        //   return { name: value[0], value: value[1]}
+        // })
+
+        setAllData(rows)
+
+        // setPosts({})
 
         // const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
      // .catch(() => console.log("Can’t access " + url + " response. Blocked by browser?"))
 
-        const url = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/lastFive' // site that doesn’t send Access-Control-*
-        fetch(url) // https://cors-anywhere.herokuapp.com/https://example.com
-        .then(response => response.json())
-        .then(data => {
-          data04 = data.map((value)=>{
-            return JSON.parse(value)
-          })
+        // const url = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/lastFive' // site that doesn’t send Access-Control-*
+        // fetch(url) // https://cors-anywhere.herokuapp.com/https://example.com
+        // .then(response => response.json())
+        // .then(data => {
+        //   data04 = data.map((value)=>{
+        //     return JSON.parse(value)
+        //   })
           
-        })
-        .catch(console.error);
+        // })
+        // .catch(console.error);
          
-        const url2 = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/ageGraph' // site that doesn’t send Access-Control-*
-        fetch(url2) // https://cors-anywhere.herokuapp.com/https://example.com
-        .then(response => response.json())
-        .then(data => {
-          data05 = data
-          console.log(data05,"^^^^")
-          // console.log(data04)
-          setResponse("\nPatients")
-        })
-        .catch(console.error);
+        // const url2 = 'https://us-central1-sopes1-dic2020.cloudfunctions.net/Redis-API/ageGraph' // site that doesn’t send Access-Control-*
+        // fetch(url2) // https://cors-anywhere.herokuapp.com/https://example.com
+        // .then(response => response.json())
+        // .then(data => {
+        //   data05 = data
+        //   // console.log(data05,"^^^^")
+        //   // console.log(data04)
+          
+        // })
+        // .catch(console.error);
          
-
         // console.log(jsonData)
         
         // console.log(data, 'datos')
@@ -165,60 +173,44 @@ export default function Orders() {
   return (
     <React.Fragment>
 
+      
+      <h3>Mongo Data Graph</h3>
 
-
-<h3>Mongo Data Graph</h3>
-
-<PieChart width={930} height={900}>
-        <Pie data={data01} dataKey="value" outerRadius={170} fill="#677f8d" label={renderCustomizedLabel} labelLine={false}/>
-        <Pie data={data02} dataKey="value" innerRadius={210} outerRadius={255} fill="#8eabbd" label={renderCustomizedLabel2} labelLine={false}/>
-        <Pie data={data03} dataKey="value" innerRadius={320} outerRadius={350} fill="#abcbdf" label={renderCustomizedLabel3} labelLine={false}/>
+      <PieChart width={930} height={900}>
+        <Pie data={Object.entries(allData.reduce((obj, value)=>{
+          if(!obj[value.location]){
+            obj[value.location] = 1
+          }else{
+            obj[value.location] += 1
+          }
+          return obj
+        },{})).map((value)=>{
+          return { name: value[0], value: value[1]}
+        })} dataKey="value" outerRadius={170} fill="#677f8d" label={renderCustomizedLabel} labelLine={false}/>
+        
+        <Pie data={Object.entries(allData.reduce((obj, value)=>{
+          if(!obj[value.infected_type]){
+            obj[value.infected_type] = 1
+          }else{
+            obj[value.infected_type] += 1
+          }
+          return obj
+        },{})).map((value)=>{
+          return { name: value[0], value: value[1]}
+        })} dataKey="value" innerRadius={210} outerRadius={255} fill="#8eabbd" label={renderCustomizedLabel2} labelLine={false}/>
+        <Pie data={Object.entries(allData.reduce((obj, value)=>{
+          if(!obj[value.state]){
+            obj[value.state] = 1
+          }else{
+            obj[value.state] += 1
+          }
+          return obj
+        },{})).map((value)=>{
+          return { name: value[0], value: value[1]}
+        })} dataKey="value" innerRadius={320} outerRadius={350} fill="#abcbdf" label={renderCustomizedLabel3} labelLine={false}/>
       </PieChart>
 
-<h3>Age Graph</h3>
-        <BarChart 
-              data={data05}
-              layout="vertical" barCategoryGap={1}
-              // margin={{ top: 0, right: 50, left: 0, bottom: 0 }}
-              width={730} height={300}
-              >
-        <XAxis type="number" hide />
-        <YAxis type="category" width={40} padding={{ left: 200 }} dataKey="name"/>
-            
-        <Bar 
-           dataKey="value" 
-           fill="#323232"
-           label
-           barSize={20}
-           />
-           
-      </BarChart>
-   
 
-      <Title>Last 5 - Patients</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Location</TableCell>
-            <TableCell>Age</TableCell>
-            <TableCell>Infected Type</TableCell>
-            <TableCell align="right">State</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data04.map((data) => (
-            <TableRow>
-              <TableCell>{data.name}</TableCell>
-              <TableCell>{data.location}</TableCell>
-              <TableCell>{data.age}</TableCell>
-              <TableCell>{data.infected_type}</TableCell>
-              <TableCell align="right">{data.state}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      
       <Title>Top 3 - Locations</Title>
       <Table size="small">
         <TableHead>
@@ -231,7 +223,19 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data01.slice(0,3).map((data01) => (
+          {
+          Object.entries(allData.reduce((obj, value)=>{
+            if(!obj[value.location]){
+              obj[value.location] = 1
+            }else{
+              obj[value.location] += 1
+            }
+            return obj
+          },{})).map((value)=>{
+            return { name: value[0], value: value[1]}
+          })
+          .sort(function(a, b){return b.value-a.value})
+          .slice(0,3).map((data01) => (
             <TableRow>
               <TableCell>{data01.name}</TableCell>
               <TableCell></TableCell>
@@ -244,8 +248,7 @@ export default function Orders() {
       </Table>
  
 
- 
-      <Title>{response}</Title>
+    <Title>Patients</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -257,7 +260,7 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {allData.map((row) => (
             <TableRow key={row._id}>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.location}</TableCell>
@@ -268,11 +271,13 @@ export default function Orders() {
           ))}
         </TableBody>
       </Table>
-      <div className={classes.seeMore}>
+
+    <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>
           See more orders 
         </Link>
       </div>
+
     </React.Fragment>
   );
 }

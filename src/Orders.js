@@ -10,6 +10,7 @@ import Title from './Title.js';
 import { PieChart, Pie, Cell, sector } from 'recharts';
 import socketIOClient from "socket.io-client";
 const ENDPOINT = "https://node-mongo-service-tko2cvu2ea-uc.a.run.app";
+import { DataGrid } from '@material-ui/data-grid';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from 'recharts';
 
 
@@ -17,7 +18,26 @@ import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from 
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
-
+/*            <TableCell>Name</TableCell>
+            <TableCell>Location</TableCell>
+            <TableCell>Age</TableCell>
+            <TableCell>Infected Type</TableCell>
+            <TableCell align="right">State</TableCell>
+             */
+const columns = [
+  { field: 'id', headerName: 'Id', width: 130, hide:true},
+  { field: 'name', headerName: 'Name', width: 250 },
+  { field: 'location', headerName: 'Location', width: 130 },
+  {
+    field: 'age',
+    headerName: 'Age',
+    type: 'number',
+    width: 90,
+  },
+  { field: 'infected_type', headerName: 'Infected Type', width: 200 },
+  { field: 'state', headerName: 'State', width: 130 },
+ 
+];
 
 let rows = [];
 let data01 = []
@@ -40,38 +60,38 @@ const useStyles = makeStyles((theme) => ({
 // const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;                    
-const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
  	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
  
   return (
     <text x={x} y={y} fill="black" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
-    	{`${data01[index].name} ${(percent * 100).toFixed(0)}%`}
+    	{`${name} ${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
 
-const renderCustomizedLabel2 = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+const renderCustomizedLabel2 = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
  	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
  
   return (
     <text x={x} y={y} fill="black" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
-    	{`${data02[index].name} ${(percent * 100).toFixed(0)}%`}
+    	{`${name} ${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
 
-const renderCustomizedLabel3 = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+const renderCustomizedLabel3 = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name}) => {
  	const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x  = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy  + radius * Math.sin(-midAngle * RADIAN);
  
   return (
     <text x={x} y={y} fill="black" textAnchor={x > cx ? 'start' : 'end'} 	dominantBaseline="central">
-    	{`${data03[index].name} ${(percent * 100).toFixed(0)}%`}
+    	{`${name} ${(percent * 100).toFixed(0)}%`}
     </text>
   );
 };
@@ -85,7 +105,10 @@ export default function Orders() {
     const socket = socketIOClient(ENDPOINT);
     socket.on("patientsMessage", data => {
         rows = JSON.parse(data)
-
+        rows = rows.map((rowData)=>{
+          rowData.id = rowData._id
+          return rowData
+        })
 
         // data01 = Object.entries(rows.reduce((obj, value)=>{
         //   if(!obj[value.location]){
@@ -249,7 +272,7 @@ export default function Orders() {
  
 
     <Title>Patients</Title>
-      <Table size="small">
+      {/* <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -270,7 +293,11 @@ export default function Orders() {
             </TableRow>
           ))}
         </TableBody>
-      </Table>
+      </Table> */}
+
+    <div style={{ height: 800, width: '100%' }}>
+      <DataGrid id={Math.random()} rows={allData} columns={columns} pageSize={13} checkboxSelection />
+    </div>
 
     <div className={classes.seeMore}>
         <Link color="primary" href="#" onClick={preventDefault}>

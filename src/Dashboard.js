@@ -21,6 +21,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import BarsChart from './BarsChart';
+import PieRealChart from './PieRealChart';
 import Deposits from './Deposits';
 import Orders from './Orders.js';
 
@@ -175,12 +176,17 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} > 
+              <Paper className={classes.paper}>
+                { <PieRealChart /> }
+              </Paper>
+            </Grid>
+            <Grid item xs={12} >
               <Paper className={classes.paper}>
                 { <BarsChart /> }
               </Paper>
             </Grid>
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} >
               <Paper className={classes.paper}>
                 { <Chart /> }
               </Paper>
